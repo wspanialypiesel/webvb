@@ -1,37 +1,22 @@
 <?php
     include 'konfiguracja.php';
-    
-    $login = $_GET["lgn"];
-    $password = $_GET["pwd"];
-    $hashedPassword = hash("sha256", $password);
 
-    $conn = new mysqli('artkoc7548.mysql.dhosting.pl', 'ohth4o_otrebakr', 'aengie8ieGha', 'iet4cu_otrebakr');
+    $haslo = hash("sha256", $_GET["pwd"]);
+    mysqli_connect('artkoc7548.mysql.dhosting.pl', 'ohth4o_otrebakr', 'aengie8ieGha', 'iet4cu_otrebakr');
+    mysqli_select_db($bazaNazwa);
+    $rezultat = mysqli_query("SELECT id FROM ab_uzytkownicy WHERE login='".$_GET["lgn"]."' AND haslo='".$haslo."'");
+    $lista22=mysqli_query($connect,$sql22);
+    $rezultat = mysqli_query($connect,$sql1);
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    if(mysql_num_rows($rezultat) == 1) {
+        mysqli_close();
+        setcookie('login', $_GET["lgn"], time()+3600*24);
+        setcookie('haslo', $haslo, time()+3600*24);
+        header("Location: menu.php");
+        die();
     }
 
-    $stmt = $conn->prepare("SELECT id, haslo FROM uzytkownicy WHERE login = ?");
-    $stmt->bind_param("s", $login);
-    $stmt->execute();
-    $stmt->store_result();
-
-
-    if ($stmt->num_rows == 1) {
-        $stmt->bind_result($id, $dbHaslo);
-        $stmt->fetch();
-
-        if ($dbHaslo === $hashedPassword) {
-            setcookie('login', $login, time() + 3600 * 24);
-            setcookie('haslo', $hashedPassword, time() + 3600 * 24);
-            header("Location: menu.php");
-            die();
-        }
-    }
-
-    $stmt->close();
-    $conn->close();
-
+    mysqli_close($connect);
     header("Location: logowanie.php");
     die();
 ?>
