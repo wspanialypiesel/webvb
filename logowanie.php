@@ -3,7 +3,7 @@
 	<head>
 		<?php
 			include 'konfiguracja.php';
-			mysql_connect($bazaAdres,$bazaLogin,$basaHaslo);
+			mysql_connect('artkoc7548.mysql.dhosting.pl', 'ohth4o_otrebakr', 'aengie8ieGha', 'iet4cu_otrebakr');
 			mysql_select_db($bazaNazwa);
 			$sql = "SELECT id FROM uzytkownicy WHERE login='".$_COOKIE['login']."' && haslo='".$_COOKIE['haslo']."'";
 			$rezultat = mysql_query($sql);
